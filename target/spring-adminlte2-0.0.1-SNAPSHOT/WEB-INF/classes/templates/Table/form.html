@@ -1,0 +1,46 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head>
+    <title>Registration Client</title>
+</head>
+<body>
+<section layout:fragment="header">
+
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Registration category</li>
+    </ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+           <!-- <h3 class="box-title">Formulário</h3>-->
+            <div class="box-tools pull-right">
+                <a href="/category" type="button" class="btn btn-box-tool">Back</a>
+            </div>
+        </div>
+        <form data-toggle="validator" role="form" th:object="${table}" th:action="@{/table/save}" method="post">
+            <div class="box-body">
+                <input type="hidden" th:field="*{id}"/>
+
+                <div class="form-group">
+                    <label for="Name">Name</label>
+                    <input type="text" required="true" class="form-control" th:field="*{Tablename}" id="name" />
+                </div>
+                <div class="form-group">
+                    <label for="Description">TablePlcae</label>
+                    <input type="text" required="true" class="form-control" th:field="*{Tableplace}" id="description" />
+                </div>
+                <div class="form-group">
+                    <label for="Createddate">Seat</label>
+                    <input type="text" required="true" class="form-control" th:field="*{Seat}" id="createdDate" />
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

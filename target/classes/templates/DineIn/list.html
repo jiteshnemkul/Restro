@@ -1,0 +1,59 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <title>Clients</title>
+    <style>
+       .box ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+       .box li {
+            float: left;
+           padding: 14px 16px;
+        }
+
+       .box li a {
+            display: block;
+            color: black;
+            text-align: center;
+
+            text-decoration: none;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<section layout:fragment="header">
+    <h1>DineIN</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">DineIN</li>
+</ol>
+</section>
+<div layout:fragment="content" >
+    <div class="box">
+        Free:<p th:text="${freenum}"></p>
+        Reserved:<p th:text="${reserved}"></p>
+        <div class="box-header with-border">
+            <h3 class="box-title">Table Lists</h3>
+        </div>
+        <ul>
+       <div   th:each="row : ${list}">
+           <div th:if="${row.status==true}">
+               <li> <a th:href="@{/dineincategorylist(tablename=${row.tablename},seat=${row.seat})}"><div style="height: 80px;width: 80px;text-align: center;border: 2px solid black;"><p style="text-align: center;line-height:80px;" th:text="${row.tablename}"></p></div></a></li>
+           </div>
+           <li> <a th:href="@{/dineincategorylist(tablename=${row.tablename},seat=${row.seat})}"><div style="height: 80px;width: 80px;text-align: center;border: 2px solid red;"><p style="text-align: center;line-height:80px;" th:text="${row.tablename}"></p></div></a></li>
+
+
+        </div>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <title>Clients</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Item</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Item</li>
+</ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Items Lists</h3>
+            <div class="box-tools pull-right">
+                <a href="/item/add" type="button" class="btn btn-box-tool">Add Item</a>
+                <br clear="all" />
+            </div>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>ItemName</th>
+                    <th>Categoryid</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>CreatedDate</th>
+                    <th>Action</th>
+                </tr>
+                <tr th:each="row : ${list}">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.itemname}"></td>
+                    <td th:text="${row.categoryid}"></td>
+                    <td th:text="${row.description}"></td>
+                    <td th:text="${row.price}"></td>
+                    <td th:text="${row.createdDate}"></td>
+                    <td>
+                        <a th:href="${'/item/edit/' + row.id}">edit</a> -
+                        <a th:href="${'/item/delete/' + row.id}">delete</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="/category/1">FIRST</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
+                    <a th:href="${'/item/' + p}" th:text="${p}"></a>
+                </li>
+                <li><a th:href="${'/item/' + endIndex}">LAST</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

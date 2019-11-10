@@ -1,0 +1,57 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <title>Table</title>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Table</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Table</li>
+</ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Table Lists</h3>
+            <div class="box-tools pull-right">
+                <a href="/table/add" type="button" class="btn btn-box-tool">Add Table</a>
+                <br clear="all" />
+            </div>
+        </div>
+        <div class="box-body no-padding">
+            <table class="table table-striped">
+                <tr>
+                    <th>ID</th>
+                    <th>TableName</th>
+                    <th>TablePlace</th>
+                    <th>Seat</th>
+                    <th>Action</th>
+                </tr>
+                <tr th:each="row : ${list}">
+                    <td th:text="${row.id}"></td>
+                    <td th:text="${row.Tablename}"></td>
+                    <td th:text="${row.Tableplace}"></td>
+                    <td th:text="${row.Seat}"></td>
+                    <td>
+                        <a th:href="${'/table/edit/' + row.id}">edit</a> -
+                        <a th:href="${'/table/delete/' + row.id}">delete</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="box-footer clearfix">
+            <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="/table/1">FIRST</a></li>
+                <li th:each="p : ${#numbers.sequence(1, endIndex/beginIndex)}" th:class="${p == currentIndex} ? 'active' : ''">
+                    <a th:href="${'/table/' + p}" th:text="${p}"></a>
+                </li>
+                <li><a th:href="${'/table/' + endIndex}">LAST</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

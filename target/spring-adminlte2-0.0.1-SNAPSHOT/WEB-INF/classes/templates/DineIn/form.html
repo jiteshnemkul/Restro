@@ -1,0 +1,99 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head>
+    <title></title>
+    <style>
+        .box1 ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .box1 li {
+            float: left;
+            padding: 14px 16px;
+        }
+
+        .box1 li a {
+            display: block;
+            color: black;
+            text-align: center;
+
+            text-decoration: none;
+        }
+        #Div2 {
+            display: none;
+        }
+
+
+    </style>
+    <script th:inline="javascript">
+        function addItem(item){
+            var ul = document.getElementById("dynamic-list");
+           // var candidate = document.getElementById("clickfun");
+            var li = document.createElement("li");
+            li.setAttribute('id',item);
+            li.appendChild(document.createTextNode(item));
+            ul.appendChild(li);
+        }
+        function switchVisible() {
+            if (document.getElementById('Div1')) {
+
+                if (document.getElementById('Div1').style.display == 'none') {
+                    document.getElementById('Div1').style.display = 'block';
+                    document.getElementById('Div2').style.display = 'none';
+                }
+                else {
+                    document.getElementById('Div1').style.display = 'none';
+                    document.getElementById('Div2').style.display = 'block';
+                }
+            }
+        }
+
+    </script>
+</head>
+<body>
+<section layout:fragment="header">
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">DineIn</li>
+    </ol>
+</section>
+<div layout:fragment="content">
+    <div class="box" style="margin-top:30px;">
+        Table:<p th:text="*{tablename}"></p>
+        Seat:<p th:text="*{seat}"></p>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6" style="background-color:yellow;">
+                    <ul id="dynamic-list"></ul>
+                </div>
+
+                <div class="col-sm-6 box1" style="background-color:pink;">
+                    <div id="Div1">
+                    <ul>
+                    <div th:each="row : ${lists}">
+                       <li th:href="@{/dineinitemlist(categoryid=${row.id})}"><a onclick="switchVisible();"><div style="height: 80px;width: 80px;text-align: center;border: 2px solid black;">
+                           <div style="text-align: center;line-height:80px;" th:text="${row.name}" th:value="${row.name}"></div>
+                       </div>
+                       </a> </li>
+                    </div>
+                    </ul>
+                    </div>
+                    <div id="Div2"> <ul>
+                        <div   th:each="row : ${listofitem}">
+
+                            <li> <a th:onclick="'javascript:addItem(\'' + ${row.itemname} + '\');'"><div style="height: 80px;width: 80px;text-align: center;border: 2px solid black;"><div style="text-align: center;line-height:80px;" th:text="${row.itemname}" th:value="${row.itemname}" id="clickfun"></div></div></a></li>
+
+                        </div>
+                    </ul></div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head>
+    <title>Registration Client</title>
+</head>
+<body>
+<section layout:fragment="header">
+
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Registration Item</li>
+    </ol>
+</section>
+<div layout:fragment="content">
+    <div class="box">
+        <div class="box-header with-border">
+           <!-- <h3 class="box-title">Formulário</h3>-->
+            <div class="box-tools pull-right">
+                <a href="/item" type="button" class="btn btn-box-tool">Back</a>
+            </div>
+        </div>
+        <form data-toggle="validator" role="form" th:object="${item}" th:action="@{/item/save}" method="post">
+            <div class="box-body">
+                <input type="hidden" th:field="*{id}"/>
+
+                <div class="form-group">
+                    <label for="Name">ItemName</label>
+                    <input type="text" required="true" class="form-control" th:field="*{itemname}" id="name" />
+                </div>
+                <div class="form-group">
+                    <label for="categoryid">categoryid</label>
+                    <select class="form-control form-control-sm" th:field="*{categoryid}" id="categoryid">
+
+                        <option value="">Select an category</option>
+                        <option th:each="log:${logs}"
+                                th:value="${log.id}"
+                                th:text="${log.name}"
+                        >
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Description">Description</label>
+                    <input type="text" required="true" class="form-control" th:field="*{description}" id="description" />
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="text" required="true" class="form-control" th:field="*{price}" id="price" />
+                </div>
+                <div class="form-group">
+                    <label for="createddate">Createddate</label>
+                    <input type="text" required="true" class="form-control"   th:field="*{createdDate}" id="createddate" />
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

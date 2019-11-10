@@ -1,0 +1,39 @@
+<!-- sidebar: style can be found in sidebar.less -->
+<section class="sidebar" xmlns="http://www.w3.org/1999/xhtml"  xmlns:th="http://www.thymeleaf.org">
+    <!-- sidebar menu: : style can be found in sidebar.less -->
+    <ul class="sidebar-menu">
+        <li class="active treeview">
+            <a href="#">
+                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-folder"></i>
+                <span>Item</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li><a th:href="@{/category}"><i class="fa fa-circle-o"></i>Category</a></li>
+                <li><a th:href="@{/item}"><i class="fa fa-circle-o"></i> Item</a></li>
+            </ul>
+        </li>
+
+        <li class="treeview">
+            <a th:href="@{/table}">
+                <i class="fa fa-folder"></i>
+                <span>Table</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+        </li>
+
+        <li class="treeview">
+            <a th:href="@{/dinein}">
+                <i class="fa fa-folder"></i>
+                <span>DineIn</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+        </li>
+    </ul>
+</section>
+<!-- /.sidebar -->
