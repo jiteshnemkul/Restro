@@ -1,12 +1,13 @@
 package com.jit.resto.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -29,8 +30,13 @@ public class Orderentity extends  AbstractModel<Long>{
     @Column(nullable = true, length = 40)
     private int total;
 
-    @Column(nullable = true, length = 40)
-    private long Oid;
+    @Column(nullable = true)
+    private String orderStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "Oid", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Ordertable ordertable;
 
 
 
@@ -66,11 +72,31 @@ public class Orderentity extends  AbstractModel<Long>{
         this.total = total;
     }
 
-    public long getOid() {
+    /*public long getOid() {
         return Oid;
     }
 
     public void setOid(long oid) {
         Oid = oid;
+    }*/
+
+    public Ordertable getOrdetable() {
+        return ordertable;
+    }
+
+    public void setOrdertable(Ordertable orderMasterEntity) {
+        this.ordertable = orderMasterEntity;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Ordertable getOrdertable() {
+        return ordertable;
     }
 }

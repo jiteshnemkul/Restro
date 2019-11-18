@@ -1,10 +1,7 @@
 package com.jit.resto.controller;
 
 import com.jit.resto.model.*;
-import com.jit.resto.service.ActiveOrderListService;
-import com.jit.resto.service.CategoryService;
-import com.jit.resto.service.ItemService;
-import com.jit.resto.service.TableService;
+import com.jit.resto.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
@@ -15,6 +12,7 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.Resource;
 import javax.xml.transform.sax.SAXSource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,14 +28,17 @@ public class DineInController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private OrderService orderService;
 
-    /*@Autowired
-    private Map<String,Orderentity> activeOrderList;*/
+    @Autowired
+    private OrderTableService orderTableService;
+
 
     @Autowired
     private ActiveOrderListService activeOrderList;
 
-    //private Boolean orderFinalized=false;
+
 
     @RequestMapping(value = "/dinein")
     public String index(Model model) {
@@ -53,69 +54,35 @@ public class DineInController {
     }
 
 
-    /*@RequestMapping(value = "/dinein/form")
-    public String form(@RequestParam("tablename") String tablename, @RequestParam("seat") String seat,Model model){
-        System.out.println("dhsja");
-        model.addAttribute("tablename",tablename);
-        model.addAttribute("seat",seat);
-        return "DineIn/form";
-    }*/
 
-    /*@RequestMapping(value = "/dineinlist")
-    public String index() {
-        return "redirect:/category/1";
-    }*/
     @RequestMapping(value = "/dineincategorylist")
     public String form1(@RequestParam("tablename") String tablename, @RequestParam("seat") String seat, Model model) {
         System.out.println("dhsja");
-        Page<CategoryEntity> page = categoryService.getList(1);
+        Page<CategoryEntity> categoryList = categoryService.getList(1);
 
-        int current = page.getNumber() + 1;
-        int begin = Math.max(1, current - 5);
-        int end = Math.min(begin + 10, page.getTotalPages());
-
-        model.addAttribute("catlists", page);
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
-        model.addAttribute("tablename",tablename);
-        model.addAttribute("seat",seat);
-
-        return "DineIn/categorylist";
-
-    }
-
-
-    @RequestMapping(value = "/dineinlist")
-    public String form(@RequestParam("tablename") String tablename, @RequestParam("seat") String seat, Model model) {
-        System.out.println("dhsja");
-        Page<ItemEntity> page = itemService.getList(1);
-
-        int current = page.getNumber() + 1;
-        int begin = Math.max(1, current - 5);
-        int end = Math.min(begin + 10, page.getTotalPages());
-
-        model.addAttribute("lists", page);
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
-        model.addAttribute("tablename",tablename);
-        model.addAttribute("seat",seat);
-
-        //activeOrderList=new HashMap<>();
         activeOrderList.setActiveOrderList(new HashMap<>());
+        activeOrderList.setActiveTable(tablename);
+
         OrderModel orderModel=new OrderModel();
         orderModel.setOrderentities(activeOrderList.getActiveOrderList().values().stream().collect(Collectors.toList()));
-        //model.addAttribute("orderList",activeOrderList.values());
         model.addAttribute("orderList",orderModel);
-        //orderFinalized=false;
+
+
+        model.addAttribute("catlists", categoryList);
+        model.addAttribute("tablename",tablename);
+        model.addAttribute("seat",seat);
+
         return "DineIn/form";
 
     }
+
+
+
 
     @RequestMapping(value="/addToOrder/{name}", method = RequestMethod.GET)
     public String updateActiveOrder(@PathVariable(value = "name")String itemName,Model model){
         System.out.println("updateActiveOrder called");
+        itemName=new String(itemName.replaceAll("-"," "));
         //Orderentity orderentity=activeOrderList.get(itemName);
         Orderentity orderentity=activeOrderList.getActiveOrderList().get(itemName);
         ItemEntity itemEntity=itemService.findByItemName(itemName);
@@ -148,6 +115,7 @@ public class DineInController {
     @RequestMapping(value="/removeFromOrder/{itemName}", method = RequestMethod.GET)
     public String removeFromActiveOrder(@PathVariable(value = "itemName")String itemName,Model model){
         System.out.println("removeFromActiveOrder called");
+        itemName=new String(itemName.replaceAll("-"," "));
         activeOrderList.getActiveOrderList().remove(itemName);
         OrderModel orderModel=new OrderModel();
         orderModel.setOrderentities(activeOrderList.getActiveOrderList().values());
@@ -159,6 +127,7 @@ public class DineInController {
     @RequestMapping(value="/increaseItemAmount/{itemName}", method = RequestMethod.GET)
     public String increaseItemAmount(@PathVariable(value = "itemName")String itemName,Model model){
         System.out.println("increaseItemAmount called");
+        itemName=new String(itemName.replaceAll("-"," "));
         Orderentity orderentity=activeOrderList.getActiveOrderList().get(itemName);
         orderentity.setNumber(orderentity.getNumber()+1);
         orderentity.setTotal(orderentity.getPrice()*orderentity.getNumber());
@@ -173,6 +142,7 @@ public class DineInController {
     @RequestMapping(value="/decreaseItemAmount/{itemName}", method = RequestMethod.GET)
     public String decreaseItemAmount(@PathVariable(value = "itemName")String itemName,Model model){
         System.out.println("decreaseItemAmount called");
+        itemName=new String(itemName.replaceAll("-"," "));
         Orderentity orderentity=activeOrderList.getActiveOrderList().get(itemName);
         if(orderentity.getNumber()>1) {
             orderentity.setNumber(orderentity.getNumber() - 1);
@@ -201,6 +171,7 @@ public class DineInController {
         OrderModel orderModel=new OrderModel();
         orderModel.setGrandTotal(total);
         orderModel.setOrderentities(orderentitys);
+        activeOrderList.setActiveGrandTotal(total);
         model.addAttribute("orderList",orderModel);
         //orderFinalized=true;
         return "DineIn/form::orderlist";
@@ -209,29 +180,47 @@ public class DineInController {
     @RequestMapping(value="/saveOrder", method = RequestMethod.POST)
     public String saveOrder(){
         System.out.println("saveOrder called");
-        Float grandTotal=new Float(0);
 
-            for(Orderentity o:new ArrayList<>(activeOrderList.getActiveOrderList().values())){
-                System.out.println(o.getItemname()+"\t"+o.getNumber()+"\t"+o.getPrice()+"\t"+o.getTotal());
-                grandTotal=grandTotal+o.getTotal();
-            }
-            System.out.println("Total: "+grandTotal);
+        Ordertable ordertable=new Ordertable();
+        ordertable.setGrandTotal(activeOrderList.getActiveGrandTotal());
+        ordertable.setOrderStatus("Ordered");
+        ordertable.setTableName(activeOrderList.getActiveTable());
+        Date date=new Date();
+        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat=new SimpleDateFormat("HH:mm:ss");
+        ordertable.setOrderDate(dateFormat.format(date));
+        ordertable.setOrderTime(timeFormat.format(date));
+
+        List<Orderentity> orderToSave=new ArrayList<>();
+        for(Orderentity o:new ArrayList<>(activeOrderList.getActiveOrderList().values())){
+            o.setOrdertable(ordertable);
+            o.setOrderStatus("Ordered");
+            orderToSave.add(o);
+        }
+
+        orderTableService.save(ordertable);
+        orderService.saveAll(orderToSave);
+
+        tableService.updateTableStatus(ordertable.getTableName(),false);
 
         return "redirect:dinein";
     }
-   /* public String saveOrder(@ModelAttribute("orderList")OrderModel orderModel){
-        System.out.println("saveOrder called");
-        if(orderFinalized){
-            for(Orderentity o:orderModel.getOrderentities()){
-                System.out.println(o.getItemname()+"\t"+o.getNumber()+"\t"+o.getPrice()+"\t"+o.getTotal());
-            }
-            System.out.println("Total: "+orderModel.getGrandTotal());
-        }
-        else {
-            System.out.println("Order not finalized, Press calculate again!!");
-            //TODO: Press Calculate Notification Display
-        }
-        return "redirect:dinein";
-    }*/
+
+    @RequestMapping(value="/enterCategory/{categoryId}",method = RequestMethod.GET)
+    public String enterCategory(@PathVariable("categoryId")Long categoryId,Model model){
+        System.out.println("enterCategory called");
+        List<ItemEntity> page = itemService.findBycategoryid(categoryId);
+        model.addAttribute("lists", page);
+        return "DineIn/form::menuDisplay";
+    }
+
+    @RequestMapping(value="/backToCategory",method = RequestMethod.GET)
+    public String backToCategory(Model model){
+        System.out.println("backToCategory called");
+        Page<CategoryEntity> categoryList = categoryService.getList(1);
+
+        model.addAttribute("catlists", categoryList);
+        return "DineIn/form::menuDisplay";
+    }
 
 }

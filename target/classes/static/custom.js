@@ -1,11 +1,13 @@
 function addR(itemName) {
     console.log("addRow clicked");
+    itemName=itemName.split(' ').join('-');
     var url = "/addToOrder/"+itemName;
     //console.log(url);
     $('#orderlist').load(url);
 }
 function removeOrder(itemName) {
     console.log("removeOrder clicked");
+    itemName=itemName.split(' ').join('-');
     var url = "/removeFromOrder/"+itemName;
     //console.log(url);
     $('#orderlist').load(url);
@@ -13,6 +15,7 @@ function removeOrder(itemName) {
 
 function increaseOrderNumber(itemName){
     console.log("increaseOrderNumber clicked");
+    itemName=itemName.split(' ').join('-');
     var url = "/increaseItemAmount/"+itemName;
     //console.log(url);
     $('#orderlist').load(url);
@@ -20,6 +23,7 @@ function increaseOrderNumber(itemName){
 
 function decreaseOrderNumber(itemName){
     console.log("decreaseOrderNumber clicked");
+    itemName=itemName.split(' ').join('-');
     var url = "/decreaseItemAmount/"+itemName;
     //console.log(url);
     $('#orderlist').load(url);
@@ -40,4 +44,16 @@ function saveOrder() {
     $.post(url);
 }
 
+function enterCategory(id) {
+    console.log("enterCategory clicked");
+    var url = "/enterCategory/"+id;
+    //console.log(url);
+    $('#menuDisplay').load(url);
+}
 
+function backToCategory(){
+    console.log("backToCategory clicked");
+    var url = "/backToCategory";
+    //console.log(url);
+    $('#menuDisplay').load(url);
+}

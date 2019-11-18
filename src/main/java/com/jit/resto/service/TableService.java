@@ -27,4 +27,8 @@ public class TableService extends AbstractService<TableEntity,Long> {
     public List<TableEntity> getFreetable(boolean stat){
         return tableRepository.findByStatus(stat);
     }
+
+    public void updateTableStatus(String tableName,Boolean status){
+        tableRepository.updateTableReservasion(tableName,status);
+    }
 }
