@@ -9,17 +9,14 @@ import java.util.List;
 
 
 public class OrderModel {
-    Long id;
+
     Collection<Orderentity> orderentities;
     Float grandTotal;
+    Long orderId;
+    String orderTime;
+    String tableName;
+    Integer rowIndexForNewOrderDisplay;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Collection<Orderentity> getOrderentities() {
         return orderentities;
@@ -35,5 +32,37 @@ public class OrderModel {
 
     public void setGrandTotal(Float grandTotal) {
         this.grandTotal = grandTotal;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(String orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public Integer getRowIndexForNewOrderDisplay() {
+        return rowIndexForNewOrderDisplay;
+    }
+
+    public void setRowIndexForNewOrderDisplay(Integer rowIndexForNewOrderDisplay) {
+        this.rowIndexForNewOrderDisplay = rowIndexForNewOrderDisplay;
     }
 }

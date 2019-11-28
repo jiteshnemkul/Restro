@@ -35,6 +35,18 @@
             </a>
         </li>
         <li class="treeview">
+            <a href="#">
+                <i class="fa fa-folder"></i>
+                <span>Order Details</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
+                <li><a th:href="@{/allOrder}"><i class="fa fa-circle-o"></i>View All</a></li>
+                <li><a th:href="@{/newOrder}"><i class="fa fa-circle-o"></i> New Orders</a></li>
+                <li><a th:href="@{/paymentOrder}"><i class="fa fa-circle-o"></i> Payment Pending Orders</a></li>
+            </ul>
+        </li>
+        <li class="treeview">
             <a th:href="@{/register}">
                 <i class="fa fa-dashboard"></i> <span>Register members</span>
             </a>

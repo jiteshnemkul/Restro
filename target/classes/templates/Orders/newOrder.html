@@ -1,0 +1,75 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <title>New Order</title>
+    <script th:src="@{/customScriptForCookingStatus.js}"></script>
+</head>
+<body>
+
+<section layout:fragment="header">
+    <h1>DineIN</h1>
+    <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">DineIN</li>
+    </ol>
+</section>
+<div layout:fragment="content" >
+    <div class="box box-default">
+        <div class="box-header">
+            <h3 class="box-title">New Orders</h3>
+        </div>
+        <div>
+        <div class="box-body" >
+            <div th:fragment="orderDisplay" id="orderDisplay">
+            <div th:each="order,o:${orders}"  class="col-sm-3 col-md-3">
+                <div class="box box-primary box-solid">
+                    <div class="box-body">
+                        <div class="form-group col-sm-12">
+                            <label th:for="${order.orderId}">Order Id: </label>
+                            <span th:text="${order.orderId}"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label th:for="${order.tableName}">Table Name: </label>
+                            <span th:text="${order.tableName}"></span>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label th:for="${order.orderTime}">Order Time: </label>
+                            <span th:text="${order.orderTime}"></span>
+                        </div>
+                        <div class="col-sm-12">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+
+                                    <th>S.No.</th>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Process</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="item,i:${order.orderentities}" th:class="${item.orderStatus=='Cooked'}?'bg-red':''">
+                                    <td><span th:text="${i.count}"></span> </td>
+                                    <td><span th:text="${item.itemname}"></span> </td>
+                                    <td><span th:text="${item.number}"></span> </td>
+                                    <td><button th:class="${item.orderStatus=='Cooked'}?'btn btn-warning':'btn btn-success'"  th:onclick="'javascript:changeCookingStatusOfItem('+${item.id}+')'"><i th:class="${item.orderStatus=='Cooked'}?'fa fa-fw fa-close':'fa fa-fw fa-check'"></i></button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button class="btn btn-primary" th:onclick="'javascript:changeCookingStatusOfOrder('+${order.orderId}+')'">All Cooking Completed</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</div>
+
+</body>
+</html>
